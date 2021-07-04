@@ -1,0 +1,50 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+  http://www.springframework.org/schema/aop 
+  http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+  http://www.springframework.org/schema/context 
+  http://www.springframework.org/schema/context/spring-context-2.5.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<tx:annotation-driven />
+	<context:component-scan
+		base-package="com.SpringJDBC_ORM.PracticesJDBC_ORM.DAO" />
+
+	<bean name="connectionDataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		p:driverClassName="com.mysql.jdbc.Driver"
+		p:url="jdbc:mysql://localhost/springdb" p:username="Ganeshwc"
+		p:password="N84e6BFr@27" />
+	<bean name="JDBCTemplate"
+		class="org.springframework.jdbc.core.JdbcTemplate"
+		p:dataSource-ref="connectionDataSource" />
+	<bean
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+		name="sFactory" p:dataSource-ref="connectionDataSource">
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+		<property name="annotatedClasses">
+			<list>
+				<value>com.SpringJDBC_ORM.PracticesJDBC_ORM.DAO.ProductEntity
+				</value>
+			</list>
+		</property>
+	</bean>
+	<bean name="hibernate"
+		class="org.springframework.orm.hibernate5.HibernateTemplate"
+		p:sessionFactory-ref="sFactory" />
+
+	<bean name="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager"
+		p:sessionFactory-ref="sFactory" />
+</beans>
